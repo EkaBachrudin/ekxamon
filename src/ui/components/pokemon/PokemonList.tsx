@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Link from 'next/link';
 import { usePokemonList } from '../../../presentation/hooks/use-pokemon-list';
 import { usePokemonSearch } from '../../../presentation/hooks/use-pokemon-search';
 import { PokemonRepository } from '../../../domain/repositories/pokemon.repository';
@@ -61,7 +62,9 @@ export default function PokemonList({ repository }: PokemonListProps) {
       <ul className="space-y-2 mb-6">
         {displayResults?.map((pokemon) => (
           <li key={pokemon.name} className="p-2 border rounded">
-            {pokemon.name}
+            <Link href={`/pokemon-detail/${pokemon.id}`} className="text-blue-600 hover:underline">
+              {pokemon.name}
+            </Link>
           </li>
         ))}
         

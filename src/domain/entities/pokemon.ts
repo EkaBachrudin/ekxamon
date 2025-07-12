@@ -2,6 +2,8 @@ export interface Pokemon {
   id: number;
   name: string;
   url: string;
+  imageUrl?: string;
+  types?: string[];
 }
 
 export interface PokemonList {
