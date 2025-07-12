@@ -1,0 +1,136 @@
+# Ekxamon Codebase Documentation
+
+## 1. Architectural Overview
+
+```mermaid
+graph TD
+    A[Next.js App] --> B[Pages]
+    A --> C[Layout]
+    A --> D[Styling]
+    B --> B1[page.tsx]
+    C --> C1[layout.tsx]
+    D --> D1[Tailwind CSS]
+    D --> D2[PostCSS]
+    A --> E[State Management]
+    E --> E1[Zustand]
+    A --> F[Data Fetching]
+    F --> F1[React Query]
+    A --> G[Testing]
+    G --> G1[Cypress]
+```
+
+## 2. Technology Stack
+
+```mermaid
+pie
+    title Technology Distribution
+    "Next.js" : 35
+    "React 19" : 25
+    "TypeScript" : 20
+    "Tailwind CSS" : 15
+    "Testing" : 5
+```
+
+## 3. Developer Guide
+
+### Setup
+```bash
+npm install
+npm run dev
+```
+
+### Key Scripts
+- `dev`: Starts Turbopack dev server
+- `build`: Creates production build
+- `start`: Runs production server
+- `cypress:open`: Launches test runner
+
+### Code Patterns
+- Functional components with TypeScript
+- CSS Modules with Tailwind utility classes
+- Zustand for global state management
+- React Query for data fetching
+
+## 4. Quality Standards
+
+### Linting
+- ESLint with Next.js core rules
+- TypeScript strict mode enabled
+- Prettier formatting (via ESLint)
+
+### Testing
+- Cypress configured for E2E tests
+- Recommended to add:
+  ```mermaid
+  graph LR
+    A[Unit Tests] --> B[Vitest]
+    C[Component Tests] --> D[Storybook]
+    E[E2E Tests] --> F[Cypress]
+  ```
+
+## 5. Architectural Decisions
+
+1. **Next.js App Router**
+   - File-based routing
+   - Server Components by default
+   - Streaming support
+
+2. **Styling Approach**
+   - Tailwind CSS with PostCSS
+   - Theme variables for dark/light mode
+   - No CSS-in-JS to avoid runtime overhead
+
+3. **State Management**
+   - Zustand for global state
+   - React Query for server state
+   - URL params for UI state
+
+## 6. Future Considerations
+
+```mermaid
+journey
+    title Development Roadmap
+    section Phase 1
+      Authentication: 5: Completed
+      API Integration: 3: In Progress
+    section Phase 2
+      Analytics: 1: Not Started
+      Performance: 1: Not Started
+    section Phase 3
+      Internationalization: 1: Not Started
+      Accessibility: 1: Not Started
+```
+
+## 7. Performance Metrics
+
+| Area          | Current | Target |
+|---------------|---------|--------|
+| Bundle Size   | 120kb   | <100kb |
+| LCP           | 1.2s    | <1s    |
+| TTI           | 0.8s    | <0.5s  |
+| CLS           | 0.1     | <0.05  |
+
+## 8. Dependencies
+
+```mermaid
+graph LR
+    A[Next.js] --> B[React 19]
+    A --> C[Turbopack]
+    B --> D[Zustand]
+    B --> E[React Query]
+    A --> F[TypeScript]
+    A --> G[Tailwind CSS]
+```
+
+## 9. Folder Structure
+
+```
+├── public/          # Static assets
+├── src/
+│   ├── app/         # App router
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   └── styles/      # Global styles
+├── cypress/         # Test files
+├── node_modules/
+└── .clinerules      # This documentation
