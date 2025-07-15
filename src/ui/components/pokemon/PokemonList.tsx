@@ -4,7 +4,7 @@ import { usePokemonList } from '../../../presentation/hooks/use-pokemon-list';
 import { usePokemonSearch } from '../../../presentation/hooks/use-pokemon-search';
 import { PokemonRepository } from '../../../domain/repositories/pokemon.repository';
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 10;
 
 interface PokemonListProps {
   repository: PokemonRepository;
@@ -61,16 +61,50 @@ export default function PokemonList({ repository }: PokemonListProps) {
       
       <ul className="space-y-2 mb-6">
         {displayResults?.map((pokemon) => (
-          <li key={pokemon.name} className="p-2 border rounded">
-            <Link href={`/pokemon-detail/${pokemon.id}`} className="text-blue-600 hover:underline">
-              {pokemon.name}
-            </Link>
+          <li key={pokemon.name} className="p-2 border rounded flex items-center">
+            {pokemon.imageUrl && (
+              <img 
+                src={pokemon.imageUrl} 
+                alt={pokemon.name} 
+                className="w-16 h-16 mr-3"
+                loading="lazy"
+              />
+            )}
+            <div>
+              <Link href={`/pokemon-detail/${pokemon.id}`} className="text-blue-600 hover:underline">
+                {pokemon.name}
+              </Link>
+              <div className="flex mt-1">
+                {pokemon.types?.map(type => (
+                  <span key={type} className="mr-2 px-2 py-1 text-xs rounded-full bg-gray-200">
+                    {type}
+                  </span>
+                ))}
+              </div>
+            </div>
           </li>
         ))}
         
-        {showSearchResults && searchResults.length === 0 && (
-          <li className="p-2 text-center text-gray-500">No Pokémon found</li>
-        )}
+      {showSearchResults && searchResults.length === 0 && (
+        <li className="p-2 text-center text-gray-500">No Pokémon found</li>
+      )}
+      
+      {displayLoading && (
+        <div className="animate-pulse space-y-2 mb-6">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="p-2 border rounded flex items-center">
+              <div className="bg-gray-200 rounded w-16 h-16 mr-3"></div>
+              <div>
+                <div className="h-4 bg-gray-200 rounded w-24 mb-2"></div>
+                <div className="flex">
+                  <div className="h-4 bg-gray-200 rounded w-12 mr-2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-12"></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
       </ul>
 
       {!showSearchResults && !displayLoading && (

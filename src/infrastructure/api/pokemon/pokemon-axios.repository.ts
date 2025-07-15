@@ -14,15 +14,24 @@ export class PokemonAxiosRepository implements PokemonRepository {
       `/pokemon?offset=${offset}&limit=${limit}`
     );
     
-    // Add IDs to Pokemon results
-    const pokemonsWithIds = response.data.results.map(pokemon => ({
-      ...pokemon,
-      id: extractPokemonId(pokemon.url)
-    }));
+    // Fetch details for each Pokemon to get image and types
+    const pokemonsWithDetails = await Promise.all(
+      response.data.results.map(async (pokemon) => {
+        const id = extractPokemonId(pokemon.url);
+        const detailsResponse = await pokemonApiClient.get<any>(`/pokemon/${id}`);
+        
+        return {
+          ...pokemon,
+          id,
+          imageUrl: detailsResponse.data.sprites.front_default,
+          types: detailsResponse.data.types.map((t: any) => t.type.name)
+        };
+      })
+    );
     
     return {
       ...response.data,
-      results: pokemonsWithIds
+      results: pokemonsWithDetails
     };
   }
 
@@ -31,11 +40,20 @@ export class PokemonAxiosRepository implements PokemonRepository {
       `/pokemon?limit=100`
     );
     
-    // Add IDs to Pokemon results
-    const pokemonsWithIds = response.data.results.map(pokemon => ({
-      ...pokemon,
-      id: extractPokemonId(pokemon.url)
-    }));
+    // Add IDs and fetch details for filtered Pokemon
+    const pokemonsWithIds = await Promise.all(
+      response.data.results.map(async (pokemon) => {
+        const id = extractPokemonId(pokemon.url);
+        const detailsResponse = await pokemonApiClient.get<any>(`/pokemon/${id}`);
+        
+        return {
+          ...pokemon,
+          id,
+          imageUrl: detailsResponse.data.sprites.front_default,
+          types: detailsResponse.data.types.map((t: any) => t.type.name)
+        };
+      })
+    );
     
     // Filter results based on query
     const filtered = pokemonsWithIds.filter(pokemon => 
