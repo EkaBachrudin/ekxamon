@@ -1,5 +1,6 @@
 import React from 'react';
 import { Pokemon } from '../../../domain/entities/pokemon';
+import './PokemonDetail.scss';
 
 interface PokemonDetailProps {
   pokemon: Pokemon;
