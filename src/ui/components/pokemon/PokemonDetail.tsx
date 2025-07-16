@@ -6,9 +6,9 @@ interface PokemonDetailProps {
 }
 
 const DetailItem = ({ label, value }: { label: string; value: string | number }) => (
-  <div className="bg-gray-50 p-3 rounded-lg">
-    <p className="text-sm text-gray-500">{label}</p>
-    <p className="font-medium">{value}</p>
+  <div className="pokemon-detail-detailItem">
+    <p className="pokemon-detail-detailLabel">{label}</p>
+    <p className="pokemon-detail-detailValue">{value}</p>
   </div>
 );
 
@@ -22,25 +22,25 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
     : (pokemon.genderRate / 8 * 100).toFixed(1);
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div className="pokemon-detail">
       <div className="flex flex-col items-center">
-        <h1 className="text-3xl font-bold capitalize mb-4">{pokemon.name}</h1>
+        <h1 className="pokemon-detail-title">{pokemon.name}</h1>
         
         {pokemon.imageUrl && (
           <img 
             src={pokemon.imageUrl} 
             alt={pokemon.name} 
-            className="w-48 h-48 object-contain"
+            className="pokemon-detail-image"
           />
         )}
         
-        <div className="mt-4">
-          <h2 className="text-xl font-semibold mb-2">Types</h2>
-          <div className="flex flex-wrap gap-2">
+        <div className="pokemon-detail-typesContainer">
+          <h2 className="pokemon-detail-typesTitle">Types</h2>
+          <div className="pokemon-detail-typesList">
             {pokemon.types?.map((type, index) => (
               <span 
                 key={index}
-                className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
+                className="pokemon-detail-typeItem"
               >
                 {type}
               </span>
@@ -48,17 +48,17 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mt-4 w-full">
+        <div className="pokemon-detail-detailsGrid">
           <DetailItem label="Weight" value={`${(pokemon.weight / 10).toFixed(1)} kg`} />
           <DetailItem label="Height" value={`${(pokemon.height * 10).toFixed(1)} cm`} />
           <DetailItem label="Category" value={pokemon.species || 'Unknown'} />
-          <div className="col-span-2">
-            <h2 className="text-xl font-semibold mb-2">Abilities</h2>
-            <div className="flex flex-wrap gap-2">
+          <div className="pokemon-detail-abilitiesContainer">
+            <h2 className="pokemon-detail-abilitiesTitle">Abilities</h2>
+            <div className="pokemon-detail-abilitiesList">
               {pokemon.abilities?.map((ability, index) => (
                 <span
                   key={index}
-                  className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm"
+                  className="pokemon-detail-abilityItem"
                 >
                   {ability}
                 </span>
@@ -66,14 +66,14 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
             </div>
           </div>
           
-          <div className="col-span-2 mt-4">
-            <h2 className="text-xl font-semibold mb-2">Gender Distribution</h2>
+          <div className="pokemon-detail-genderContainer">
+            <h2 className="pokemon-detail-genderTitle">Gender Distribution</h2>
             {pokemon.genderRate === -1 ? (
               <p className="text-gray-700">Genderless</p>
             ) : (
-              <div className="flex items-center">
-                <span className="mr-2 text-blue-500">♂</span>
-                <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div className="pokemon-detail-genderDistribution">
+                <span className="pokemon-detail-maleSymbol">♂</span>
+                <div className="pokemon-detail-genderBar">
                   <div 
                     className="h-full bg-gradient-to-r from-blue-400 to-pink-400" 
                     style={{ 
@@ -82,21 +82,21 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
                     }}
                   />
                 </div>
-                <span className="ml-2 text-pink-500">♀</span>
-                <span className="ml-2 text-sm">
+                <span className="pokemon-detail-femaleSymbol">♀</span>
+                <span className="pokemon-detail-genderPercentage">
                   ♂ {malePercent}% ♀ {femalePercent}%
                 </span>
               </div>
             )}
           </div>
           
-          <div className="col-span-2 mt-4">
-            <h2 className="text-xl font-semibold mb-2">Weaknesses</h2>
-            <div className="flex flex-wrap gap-2">
+          <div className="pokemon-detail-weaknessesContainer">
+            <h2 className="pokemon-detail-weaknessesTitle">Weaknesses</h2>
+            <div className="pokemon-detail-weaknessesList">
               {pokemon.weaknesses?.map((weakness, index) => (
                 <span
                   key={index}
-                  className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm capitalize"
+                  className="pokemon-detail-weaknessItem"
                 >
                   {weakness}
                 </span>
@@ -106,21 +106,21 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
         </div>
         
         {pokemon.evolutionChain && pokemon.evolutionChain.length > 0 && (
-          <div className="mt-8">
-            <h2 className="text-2xl font-bold mb-4">Evolution Chain</h2>
+          <div className="pokemon-detail-evolutionContainer">
+            <h2 className="pokemon-detail-evolutionTitle">Evolution Chain</h2>
             <div className="flex flex-col items-center">
               {pokemon.evolutionChain.map((stage, index) => (
                 <React.Fragment key={index}>
-                  <div className="text-center p-4 border rounded-lg shadow-sm">
+                  <div className="pokemon-detail-evolutionStage">
                     <img 
                       src={stage.imageUrl} 
                       alt={stage.species} 
-                      className="w-24 h-24 mx-auto"
+                      className="pokemon-detail-evolutionStageImage"
                     />
-                    <p className="font-bold capitalize mt-2">{stage.species}</p>
-                    <div className="flex flex-wrap justify-center gap-1 mt-1">
+                    <p className="pokemon-detail-evolutionStageName">{stage.species}</p>
+                    <div className="pokemon-detail-evolutionStageTypes">
                       {stage.types.map((type, i) => (
-                        <span key={i} className="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs">
+                        <span key={i} className="pokemon-detail-evolutionStageType">
                           {type}
                         </span>
                       ))}
@@ -128,10 +128,10 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
                   </div>
                   
                   {index < pokemon.evolutionChain!.length - 1 && (
-                    <div className="my-3 flex flex-col items-center">
+                    <div className="pokemon-detail-evolutionArrow">
                       <div className="text-xl text-gray-500">↓</div>
                       {stage.minLevel !== undefined && (
-                        <div className="text-sm text-gray-600 mt-1">
+                        <div className="pokemon-detail-evolutionLevel">
                           Level {stage.minLevel}
                         </div>
                       )}
@@ -144,9 +144,9 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
         )}
         
         {pokemon.description && (
-          <div className="mt-4">
-            <h2 className="text-xl font-semibold mb-2">Description</h2>
-            <p className="text-gray-700">{pokemon.description}</p>
+          <div className="pokemon-detail-description">
+            <h2 className="pokemon-detail-descriptionTitle">Description</h2>
+            <p className="pokemon-detail-descriptionText">{pokemon.description}</p>
           </div>
         )}
       </div>
