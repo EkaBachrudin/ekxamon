@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { usePokemonList } from '../../../presentation/hooks/use-pokemon-list';
 import { usePokemonSearch } from '../../../presentation/hooks/use-pokemon-search';
 import { PokemonRepository } from '../../../domain/repositories/pokemon.repository';
@@ -8,11 +9,22 @@ const PAGE_SIZE = 10;
 
 interface PokemonListProps {
   repository: PokemonRepository;
+  page: number;
 }
 
-export default function PokemonList({ repository }: PokemonListProps) {
-  const [currentPage, setCurrentPage] = useState(0);
+export default function PokemonList({ repository, page }: PokemonListProps) {
+  const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(page - 1);
   const offset = currentPage * PAGE_SIZE;
+
+  // Sync currentPage when page prop changes and validate page
+  useEffect(() => {
+    if (isNaN(page) || page < 1) {
+      router.push('/pokemon-list?page=1');
+      return;
+    }
+    setCurrentPage(page - 1);
+  }, [page]);
   
   const { 
     query, 
@@ -111,20 +123,20 @@ export default function PokemonList({ repository }: PokemonListProps) {
         <div className="flex justify-between items-center">
           <button
             className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
-            disabled={currentPage === 0}
-            onClick={() => setCurrentPage(prev => Math.max(0, prev - 1))}
+            disabled={page === 1}
+            onClick={() => router.push(`/pokemon-list?page=${page - 1}`)}
           >
             Previous
           </button>
           
           <div>
-            Page {currentPage + 1} of {totalPages}
+            Page {page} of {totalPages}
           </div>
           
           <button
             className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
-            disabled={currentPage >= totalPages - 1}
-            onClick={() => setCurrentPage(prev => prev + 1)}
+            disabled={page >= totalPages}
+            onClick={() => router.push(`/pokemon-list?page=${page + 1}`)}
           >
             Next
           </button>
