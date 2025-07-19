@@ -7,3 +7,32 @@
 body {
   font-family: 'Poppins', sans-serif;
 }
+
+@layer base {
+  /* Light theme */
+  :root {
+    --background: 0 0% 100%; /* Pure white */
+    --foreground: 0 0% 13%; /* Almost black */
+    --primary: 221 83% 53%; /* Vibrant blue */
+  }
+
+  /* Dark theme */
+  .dark {
+    --background: 240 10% 4%; /* Near-black */
+    --foreground: 0 0% 98%; /* Off-white */
+    --primary: 217 91% 60%; /* Bright blue */
+  }
+
+  /* Neon theme */
+  .neon {
+    --background: 240 100% 5%; /* Deep blue-black */
+    --foreground: 120 100% 97%; /* Bright cyan-tinted white */
+    --primary: 300 100% 50%; /* Electric magenta */
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+  }
+}
