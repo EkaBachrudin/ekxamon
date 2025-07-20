@@ -63,6 +63,29 @@ export class PokemonAxiosRepository implements PokemonRepository {
     return filtered;
   }
 
+  async getPokemonByType(type: string): Promise<Pokemon[]> {
+    const response = await pokemonApiClient.get<any>(`/type/${type}`);
+    const pokemons = response.data.pokemon;
+    
+    // Fetch details for each Pokemon in the type
+    const pokemonsWithDetails = await Promise.all(
+      pokemons.map(async (p: any) => {
+        const id = extractPokemonId(p.pokemon.url);
+        const detailsResponse = await pokemonApiClient.get<any>(`/pokemon/${id}`);
+        
+        return {
+          id,
+          name: p.pokemon.name,
+          url: p.pokemon.url,
+          imageUrl: detailsResponse.data.sprites.front_default,
+          types: detailsResponse.data.types.map((t: any) => t.type.name)
+        };
+      })
+    );
+    
+    return pokemonsWithDetails;
+  }
+
   async getPokemonById(id: number): Promise<Pokemon> {
     const pokemonResponse = await pokemonApiClient.get<any>(`/pokemon/${id}`);
     

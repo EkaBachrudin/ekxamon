@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { usePokemonList } from '../../../presentation/hooks/use-pokemon-list';
 import { usePokemonSearch } from '../../../presentation/hooks/use-pokemon-search';
+import { usePokemonByType } from '../../../presentation/hooks/use-pokemon-by-type';
 import { PokemonRepository } from '../../../domain/repositories/pokemon.repository';
 
 const PAGE_SIZE = 10;
@@ -33,6 +34,13 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
     isSearching 
   } = usePokemonSearch(repository);
   
+  const [selectedType, setSelectedType] = useState<string>('');
+  const [showTypeResults, setShowTypeResults] = useState(false);
+  const { data: typeData, isLoading: isTypeLoading } = usePokemonByType(
+    repository,
+    selectedType
+  );
+  
   const { data, isLoading, error } = usePokemonList(
     repository,
     offset,
@@ -40,9 +48,28 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
   );
 
   const totalPages = data?.count ? Math.ceil(data.count / PAGE_SIZE) : 0;
-
+  
   // Determine which data to display
   const showSearchResults = query.trim() !== '';
+  const showTypeFilter = selectedType !== '';
+  
+  // Handle type filter change
+  useEffect(() => {
+    if (selectedType) {
+      setShowTypeResults(true);
+      // Reset page to 1 when type changes
+      router.push(`/pokemon-list?page=1`);
+    } else {
+      setShowTypeResults(false);
+    }
+  }, [selectedType]);
+  
+  // Calculate pagination for type results
+  const typeResultsCount = typeData?.length || 0;
+  const typeTotalPages = Math.ceil(typeResultsCount / PAGE_SIZE);
+  
+  // Get paginated type results
+  const paginatedTypeResults = typeData?.slice(offset, offset + PAGE_SIZE);
   const displayResults = showSearchResults ? searchResults : data?.results;
   const displayLoading = isSearching || isLoading;
 
@@ -54,25 +81,60 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
       
       {displayLoading && <div>Loading...</div>}
       
-      <div className="mb-4">
-        <input
-          key="search-input"
-          type="text"
-          placeholder="Search Pokémon..."
-          className="w-full p-2 border rounded"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
+      <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <input
+            key="search-input"
+            type="text"
+            placeholder="Search Pokémon..."
+            className="w-full p-2 border rounded"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </div>
+        <div>
+          <select
+            value={selectedType}
+            onChange={(e) => setSelectedType(e.target.value)}
+            className="w-full p-2 border rounded"
+          >
+            <option value="">All Types</option>
+            <option value="normal">Normal</option>
+            <option value="fire">Fire</option>
+            <option value="water">Water</option>
+            <option value="electric">Electric</option>
+            <option value="grass">Grass</option>
+            <option value="ice">Ice</option>
+            <option value="fighting">Fighting</option>
+            <option value="poison">Poison</option>
+            <option value="ground">Ground</option>
+            <option value="flying">Flying</option>
+            <option value="psychic">Psychic</option>
+            <option value="bug">Bug</option>
+            <option value="rock">Rock</option>
+            <option value="ghost">Ghost</option>
+            <option value="dragon">Dragon</option>
+            <option value="dark">Dark</option>
+            <option value="steel">Steel</option>
+            <option value="fairy">Fairy</option>
+          </select>
+        </div>
       </div>
       
-      {showSearchResults && (
+      {showSearchResults && !showTypeFilter && (
         <div className="mb-2 text-sm text-gray-600">
           Showing {searchResults.length} results for "{query}"
         </div>
       )}
       
+      {showTypeFilter && (
+        <div className="mb-2 text-sm text-gray-600">
+          Showing {typeResultsCount} Pokémon of type: {selectedType}
+        </div>
+      )}
+      
       <ul className="space-y-2 mb-6">
-        {displayResults?.map((pokemon) => (
+        {(showTypeResults ? paginatedTypeResults : displayResults)?.map((pokemon) => (
           <li key={pokemon.name} className="p-2 border rounded flex items-center">
             {pokemon.imageUrl && (
               <img 
@@ -119,7 +181,7 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
       )}
       </ul>
 
-      {!showSearchResults && !displayLoading && (
+      {!showSearchResults && !showTypeResults && !displayLoading && (
         <div className="flex justify-between items-center">
           <button
             className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
@@ -130,13 +192,13 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
           </button>
           
           <div>
-            Page {page} of {totalPages}
+            Page {page} of {showTypeResults ? typeTotalPages : totalPages}
           </div>
           
           <button
             className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
-            disabled={page >= totalPages}
             onClick={() => router.push(`/pokemon-list?page=${page + 1}`)}
+            disabled={showTypeResults ? page >= typeTotalPages : page >= totalPages}
           >
             Next
           </button>

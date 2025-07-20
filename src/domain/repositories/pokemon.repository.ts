@@ -1,7 +1,8 @@
 import { Pokemon, PokemonList } from "../entities/pokemon";
 
 export interface PokemonRepository {
-  getPokemonList(offset?: number, limit?: number): Promise<PokemonList>;
-  searchPokemon(query: string): Promise<Pokemon[]>;
+  getPokemonList(offset: number, limit: number): Promise<PokemonList>;
   getPokemonById(id: number): Promise<Pokemon>;
+  searchPokemon(query: string): Promise<Pokemon[]>;
+  getPokemonByType(type: string): Promise<Pokemon[]>;
 }
