@@ -1,45 +1,37 @@
 import { useState, useEffect } from 'react';
-import { SearchPokemonUseCase } from '../../application/use-cases/search-pokemon.usecase';
+import { useQuery } from '@tanstack/react-query';
 import { PokemonRepository } from '../../domain/repositories/pokemon.repository';
 import { Pokemon } from '../../domain/entities/pokemon';
+import { SearchPokemonUseCase } from '../../application/use-cases/search-pokemon.usecase';
 
 export const usePokemonSearch = (repository: PokemonRepository) => {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<Pokemon[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
+  const [debouncedQuery, setDebouncedQuery] = useState(query);
   
-  const searchPokemonUseCase = new SearchPokemonUseCase(repository);
-
   useEffect(() => {
-    if (query.trim() === '') {
-      setResults([]);
-      setIsSearching(false);
-      return;
-    }
-
-    const handler = setTimeout(async () => {
-      setIsSearching(true);
-      try {
-        const searchResults = await searchPokemonUseCase.execute(query);
-        setResults(searchResults);
-      } catch (error) {
-        console.error('Search failed:', error);
-        setResults([]);
-      } finally {
-        setIsSearching(false);
-      }
+    const handler = setTimeout(() => {
+      setDebouncedQuery(query);
     }, 500);
-
+    
     return () => {
       clearTimeout(handler);
-      setIsSearching(false);
     };
   }, [query]);
+
+  const searchPokemonUseCase = new SearchPokemonUseCase(repository);
+  
+  const { data, isLoading } = useQuery<Pokemon[], Error>({
+    queryKey: ['searchPokemon', debouncedQuery],
+    queryFn: ({ signal }) => searchPokemonUseCase.execute(debouncedQuery, signal),
+    enabled: debouncedQuery.length > 0,
+    retry: false,
+    staleTime: 1000 * 60 * 5,
+  });
 
   return {
     query,
     setQuery,
-    results,
-    isSearching
+    results: data || [],
+    isSearching: isLoading,
   };
 };

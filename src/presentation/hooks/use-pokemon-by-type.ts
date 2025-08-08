@@ -1,34 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { PokemonRepository } from '../../domain/repositories/pokemon.repository';
 import { Pokemon } from '../../domain/entities/pokemon';
 
 export const usePokemonByType = (repository: PokemonRepository, type: string) => {
-  const [data, setData] = useState<Pokemon[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    if (!type) {
-      setData([]);
-      return;
-    }
-
-    const fetchPokemonByType = async () => {
-      setIsLoading(true);
-      setError(null);
-      
-      try {
-        const result = await repository.getPokemonByType(type);
-        setData(result);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('Failed to fetch Pokémon by type'));
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchPokemonByType();
-  }, [repository, type]);
+  const { data, isLoading, error } = useQuery<Pokemon[], Error>({
+    queryKey: ['pokemonByType', type],
+    queryFn: () => repository.getPokemonByType(type),
+    enabled: !!type,
+    retry: 2,
+    staleTime: 1000 * 60 * 5,
+  });
 
   return { data, isLoading, error };
 };

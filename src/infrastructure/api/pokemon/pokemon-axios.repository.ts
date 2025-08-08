@@ -14,7 +14,6 @@ export class PokemonAxiosRepository implements PokemonRepository {
       `/pokemon?offset=${offset}&limit=${limit}`
     );
     
-    // Fetch details for each Pokemon to get image and types
     const pokemonsWithDetails = await Promise.all(
       response.data.results.map(async (pokemon) => {
         const id = extractPokemonId(pokemon.url);
@@ -35,16 +34,16 @@ export class PokemonAxiosRepository implements PokemonRepository {
     };
   }
 
-  async searchPokemon(query: string): Promise<Pokemon[]> {
+  async searchPokemon(query: string, signal?: AbortSignal): Promise<Pokemon[]> {
     const response = await pokemonApiClient.get<PokemonList>(
-      `/pokemon?limit=100`
+      `/pokemon?limit=100`,
+      { signal }
     );
     
-    // Add IDs and fetch details for filtered Pokemon
     const pokemonsWithIds = await Promise.all(
       response.data.results.map(async (pokemon) => {
         const id = extractPokemonId(pokemon.url);
-        const detailsResponse = await pokemonApiClient.get<any>(`/pokemon/${id}`);
+        const detailsResponse = await pokemonApiClient.get<any>(`/pokemon/${id}`, { signal });
         
         return {
           ...pokemon,
@@ -55,7 +54,6 @@ export class PokemonAxiosRepository implements PokemonRepository {
       })
     );
     
-    // Filter results based on query
     const filtered = pokemonsWithIds.filter(pokemon => 
       pokemon.name.toLowerCase().includes(query.toLowerCase())
     );
@@ -67,7 +65,6 @@ export class PokemonAxiosRepository implements PokemonRepository {
     const response = await pokemonApiClient.get<any>(`/type/${type}`);
     const pokemons = response.data.pokemon;
     
-    // Fetch details for each Pokemon in the type
     const pokemonsWithDetails = await Promise.all(
       pokemons.map(async (p: any) => {
         const id = extractPokemonId(p.pokemon.url);
@@ -91,7 +88,7 @@ export class PokemonAxiosRepository implements PokemonRepository {
     
     let description: string | undefined;
     let species: string | undefined;
-    let genderRate = -1; // Default to genderless
+    let genderRate = -1;
     let weaknesses: string[] = [];
     let evolutionChain: EvolutionStage[] = [];
     
@@ -99,7 +96,6 @@ export class PokemonAxiosRepository implements PokemonRepository {
       const speciesResponse = await pokemonApiClient.get<any>(`/pokemon-species/${id}/`);
       const speciesData = speciesResponse.data;
       
-      // Extract gender rate
       genderRate = speciesData.gender_rate ?? -1;
       
       const englishEntry = speciesData.flavor_text_entries.find(
@@ -113,7 +109,6 @@ export class PokemonAxiosRepository implements PokemonRepository {
           .trim();
       }
       
-      // Find English genus for category
       const englishGenus = speciesData.genera.find(
         (genus: any) => genus.language.name === 'en'
       );
@@ -121,11 +116,9 @@ export class PokemonAxiosRepository implements PokemonRepository {
         species = englishGenus.genus.replace(' Pokémon', '');
       }
       
-      // Get weaknesses from Pokemon types
       const types = pokemonResponse.data.types.map((t: any) => t.type.name);
       weaknesses = await this.getTypeWeaknesses(types);
       
-      // Get evolution chain if available
       if (speciesData.evolution_chain?.url) {
         evolutionChain = await this.getEvolutionChain(speciesData.evolution_chain.url);
       }
@@ -158,7 +151,6 @@ export class PokemonAxiosRepository implements PokemonRepository {
         const typeResponse = await pokemonApiClient.get<any>(`/type/${typeName}`);
         const damageRelations = typeResponse.data.damage_relations;
         
-        // Add all double damage types
         damageRelations.double_damage_from.forEach((type: any) => {
           weaknesses.add(type.name);
         });
@@ -176,16 +168,13 @@ export class PokemonAxiosRepository implements PokemonRepository {
       const chainData = response.data.chain;
       const evolutionChain: EvolutionStage[] = [];
       
-      // Traverse evolution chain
       let currentStage = chainData;
       while (currentStage) {
         const speciesName = currentStage.species.name;
         
-        // Get Pokemon details for the species
         const pokemonResponse = await pokemonApiClient.get<any>(`/pokemon/${speciesName}`);
         const pokemonData = pokemonResponse.data;
         
-        // Extract evolution details
         const minLevel = currentStage.evolves_to[0]?.evolution_details[0]?.min_level;
         
         evolutionChain.push({
@@ -195,7 +184,6 @@ export class PokemonAxiosRepository implements PokemonRepository {
           minLevel
         });
         
-        // Move to next evolution stage
         currentStage = currentStage.evolves_to[0];
       }
       
