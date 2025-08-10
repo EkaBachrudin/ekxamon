@@ -181,7 +181,7 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
       )}
       </ul>
 
-      {!showSearchResults && !showTypeResults && !displayLoading && (
+      {!showSearchResults && !displayLoading && (
         <div className="flex justify-between items-center">
           <button
             className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
