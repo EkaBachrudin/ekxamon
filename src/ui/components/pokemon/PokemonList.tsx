@@ -5,6 +5,9 @@ import { usePokemonList } from '../../../presentation/hooks/use-pokemon-list';
 import { usePokemonSearch } from '../../../presentation/hooks/use-pokemon-search';
 import { usePokemonByType } from '../../../presentation/hooks/use-pokemon-by-type';
 import { PokemonRepository } from '../../../domain/repositories/pokemon.repository';
+import { Pokemon } from '@/domain/entities/pokemon';
+import { getColorsFromTypes } from '@/utils/pokemonColors';
+import './PokemonList.scss';
 
 const PAGE_SIZE = 10;
 
@@ -73,6 +76,11 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
   const displayResults = showSearchResults ? searchResults : data?.results;
   const displayLoading = isSearching || isLoading;
 
+  const getElementImage = (pokemon: Pokemon): string => {
+    const firstType = pokemon.types?.[0] ?? 'notype';
+    return firstType;
+  } 
+
   if (error) return <div>Error loading Pokémon</div>;
 
   return (
@@ -135,26 +143,38 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
       
       <ul className="space-y-2 mb-6">
         {(showTypeResults ? paginatedTypeResults : displayResults)?.map((pokemon) => (
-          <li key={pokemon.name} className="p-2 border rounded flex items-center">
+          <li key={pokemon.name} className="pokemon-card" style={{backgroundColor: getColorsFromTypes(pokemon.types)[0]+'33'}}>
+            <div>
+              <Link href={`/pokemon-detail/${pokemon.id}`} className="text-[21px] text-black hover:underline font-bold">
+                {pokemon.name}
+              </Link>
+              <div className="flex mt-1">
+                {pokemon.types?.map((type, index) => (
+                 <div key={type} className='type-badge' style={{backgroundColor: getColorsFromTypes(pokemon.types)[index]}}>
+                  <div className='w-[20px] h-[20px] bg-white rounded-full flex justify-center items-center'> <img src={`elementsColor/${type}.svg`} className='size-[13px]' alt="typeimage" /> </div>
+                   <span>
+                    {type}
+                  </span>
+                 </div>
+                ))}
+              </div>
+            </div>
+
             {pokemon.imageUrl && (
               <img 
                 src={pokemon.imageUrl} 
                 alt={pokemon.name} 
-                className="w-16 h-16 mr-3"
+                className="pokemon-image"
                 loading="lazy"
               />
             )}
-            <div>
-              <Link href={`/pokemon-detail/${pokemon.id}`} className="text-blue-600 hover:underline">
-                {pokemon.name}
-              </Link>
-              <div className="flex mt-1">
-                {pokemon.types?.map(type => (
-                  <span key={type} className="mr-2 px-2 py-1 text-xs rounded-full bg-gray-200">
-                    {type}
-                  </span>
-                ))}
-              </div>
+
+            <div className='pokemon-element-container' style={{backgroundColor: getColorsFromTypes(pokemon.types)[0]}}>
+              <img
+                className="pokemon-element-img"
+                src={`/elements/${getElementImage(pokemon)}.svg`}
+                alt="element"
+              />
             </div>
           </li>
         ))}
@@ -164,15 +184,15 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
       )}
       
       {displayLoading && (
-        <div className="animate-pulse space-y-2 mb-6">
+        <div className="loading-animation">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="p-2 border rounded flex items-center">
-              <div className="bg-gray-200 rounded w-16 h-16 mr-3"></div>
+            <div key={i} className="loading-item">
+              <div className="loading-img"></div>
               <div>
-                <div className="h-4 bg-gray-200 rounded w-24 mb-2"></div>
+                <div className="loading-text w-24 mb-2"></div>
                 <div className="flex">
-                  <div className="h-4 bg-gray-200 rounded w-12 mr-2"></div>
-                  <div className="h-4 bg-gray-200 rounded w-12"></div>
+                  <div className="loading-text w-12 mr-2"></div>
+                  <div className="loading-text w-12"></div>
                 </div>
               </div>
             </div>
@@ -182,7 +202,7 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
       </ul>
 
       {!showSearchResults && !displayLoading && (
-        <div className="flex justify-between items-center">
+        <div className="pagination-container">
           <button
             className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
             disabled={page === 1}
