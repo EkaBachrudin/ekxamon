@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type SetStateAction } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { usePokemonList } from '../../../presentation/hooks/use-pokemon-list';
@@ -47,7 +47,8 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
   const { data, isLoading, error } = usePokemonList(
     repository,
     offset,
-    PAGE_SIZE
+    PAGE_SIZE,
+    !showTypeResults
   );
 
   const totalPages = data?.count ? Math.ceil(data.count / PAGE_SIZE) : 0;
@@ -60,8 +61,6 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
   useEffect(() => {
     if (selectedType) {
       setShowTypeResults(true);
-      // Reset page to 1 when type changes
-      router.push(`/pokemon-list?page=1`);
     } else {
       setShowTypeResults(false);
     }
@@ -80,6 +79,11 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
     const firstType = pokemon.types?.[0] ?? 'notype';
     return firstType;
   } 
+
+  const selectType = (e: { target: { value: SetStateAction<string>; }; }) => {
+      router.push(`/pokemon-list?page=1`);
+      setSelectedType(e.target.value);
+  }
 
   if (error) return <div>Error loading Pokémon</div>;
 
@@ -103,7 +107,7 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
         <div>
           <select
             value={selectedType}
-            onChange={(e) => setSelectedType(e.target.value)}
+            onChange={(e) => selectType(e)}
             className="w-full p-2 border rounded"
           >
             <option value="">All Types</option>
