@@ -36,7 +36,7 @@ export class PokemonAxiosRepository implements PokemonRepository {
 
   async searchPokemon(query: string, signal?: AbortSignal): Promise<Pokemon[]> {
     const response = await pokemonApiClient.get<PokemonList>(
-      `/pokemon?limit=100`,
+      `/pokemon?limit=100000`,
       { signal }
     );
     

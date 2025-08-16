@@ -80,9 +80,18 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
     return firstType;
   } 
 
-  const selectType = (e: { target: { value: SetStateAction<string>; }; }) => {
+  const selectType = (type: string) => {
       router.push(`/pokemon-list?page=1`);
-      setSelectedType(e.target.value);
+      setSelectedType(type);
+  }
+
+  const searchPokemon = (search: string) => {
+    if(selectedType) {
+
+    } else {
+      setQuery(search);
+    }
+    
   }
 
   if (error) return <div>Error loading Pokémon</div>;
@@ -101,13 +110,13 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
             placeholder="Search Pokémon..."
             className="w-full p-2 border rounded"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => searchPokemon(e.target.value)}
           />
         </div>
         <div>
           <select
             value={selectedType}
-            onChange={(e) => selectType(e)}
+            onChange={(e) => selectType(e.target.value)}
             className="w-full p-2 border rounded"
           >
             <option value="">All Types</option>
