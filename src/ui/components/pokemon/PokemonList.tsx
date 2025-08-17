@@ -158,7 +158,7 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
         {(showTypeResults ? paginatedTypeResults : displayResults)?.map((pokemon) => (
           <li key={pokemon.name} className="pokemon-card" style={{backgroundColor: getColorsFromTypes(pokemon.types)[0]+'33'}}>
             <div>
-              <Link href={`/pokemon-detail/${pokemon.id}`} className="text-[21px] text-black hover:underline font-bold">
+              <Link href={`/pokemon-detail/${pokemon.id}`} className="text-[21px] text-black hover:underline font-bold capitalize">
                 {pokemon.name}
               </Link>
               <div className="flex mt-1">

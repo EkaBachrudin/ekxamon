@@ -16,7 +16,7 @@
 }
 
 .type-badge {
-  @apply mr-2 py-1 text-xs rounded-full text-black font-medium p-2 flex items-center gap-1 font-bold;
+  @apply mr-2 py-1 text-sm rounded-full capitalize text-black p-2 flex items-center gap-1 font-bold;
 }
 
 .loading-animation {
