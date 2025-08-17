@@ -159,9 +159,10 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
         </div>
       )}
       
-      <ul className="space-y-2 mb-6">
+      {/* Updated Pokemon list grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         {(showTypeResults ? paginatedTypeResults : displayResults)?.map((pokemon) => (
-          <li key={pokemon.name} className="pokemon-card" style={{backgroundColor: getColorsFromTypes(pokemon.types)[0]+'33'}}>
+          <div key={pokemon.name} className="pokemon-card" style={{backgroundColor: getColorsFromTypes(pokemon.types)[0]+'33'}}>
             <div>
               <Link href={`/pokemon-detail/${pokemon.id}`} className="text-[21px] text-black hover:underline font-bold capitalize">
                 {pokemon.name}
@@ -169,10 +170,10 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
               <div className="flex mt-1">
                 {pokemon.types?.map((type, index) => (
                  <div key={type} className='type-badge' style={{backgroundColor: getColorsFromTypes(pokemon.types)[index], color: 'white'}}>
-                  <div className='w-[20px] h-[20px] bg-white rounded-full flex justify-center items-center'> <img src={`elementsColor/${type}.svg`} className='size-[13px]' alt="typeimage" /> </div>
-                   <span>
-                    {type}
-                  </span>
+                  <div className='w-[20px] h-[20px] bg-white rounded-full flex justify-center items-center'> 
+                    <img src={`elementsColor/${type}.svg`} className='size-[13px]' alt="typeimage" /> 
+                  </div>
+                  <span>{type}</span>
                  </div>
                 ))}
               </div>
@@ -194,30 +195,32 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
                 alt="element"
               />
             </div>
-          </li>
+          </div>
         ))}
         
-      {showSearchResults && searchResults.length === 0 && (
-        <li className="p-2 text-center text-gray-500">No Pokémon found</li>
-      )}
-      
-      {displayLoading && (
-        <div className="loading-animation">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="loading-item">
-              <div className="loading-img"></div>
-              <div>
-                <div className="loading-text w-24 mb-2"></div>
-                <div className="flex">
-                  <div className="loading-text w-12 mr-2"></div>
-                  <div className="loading-text w-12"></div>
+        {showSearchResults && searchResults.length === 0 && (
+          <div className="col-span-3 p-2 text-center text-gray-500">No Pokémon found</div>
+        )}
+        
+        {displayLoading && (
+          <div className="col-span-3">
+            <div className="loading-animation">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="loading-item">
+                  <div className="loading-img"></div>
+                  <div>
+                    <div className="loading-text w-24 mb-2"></div>
+                    <div className="flex">
+                      <div className="loading-text w-12 mr-2"></div>
+                      <div className="loading-text w-12"></div>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
-      )}
-      </ul>
+          </div>
+        )}
+      </div>
       
       <BottomSheet isOpen={isBottomSheetOpen} onClose={() => setIsBottomSheetOpen(false)}>
         <h2 className="text-xl font-bold mb-4">Select Pokemon Type</h2>
