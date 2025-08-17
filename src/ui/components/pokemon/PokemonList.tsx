@@ -7,6 +7,7 @@ import { usePokemonByType } from '../../../presentation/hooks/use-pokemon-by-typ
 import { PokemonRepository } from '../../../domain/repositories/pokemon.repository';
 import { Pokemon } from '@/domain/entities/pokemon';
 import { getColorsFromTypes } from '@/utils/pokemonColors';
+import BottomSheet from '@/ui/components/common/BottomSheet';
 import './PokemonList.scss';
 
 const PAGE_SIZE = 10;
@@ -39,6 +40,7 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
   
   const [selectedType, setSelectedType] = useState<string>('');
   const [showTypeResults, setShowTypeResults] = useState(false);
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const { data: typeData, isLoading: isTypeLoading } = usePokemonByType(
     repository,
     selectedType
@@ -114,31 +116,13 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
           />
         </div>
         <div>
-          <select
-            value={selectedType}
-            onChange={(e) => selectType(e.target.value)}
-            className="w-full p-2 border rounded"
+          <button
+            onClick={() => setIsBottomSheetOpen(true)}
+            className="w-full p-2 border rounded flex justify-between items-center"
           >
-            <option value="">All Types</option>
-            <option value="normal">Normal</option>
-            <option value="fire">Fire</option>
-            <option value="water">Water</option>
-            <option value="electric">Electric</option>
-            <option value="grass">Grass</option>
-            <option value="ice">Ice</option>
-            <option value="fighting">Fighting</option>
-            <option value="poison">Poison</option>
-            <option value="ground">Ground</option>
-            <option value="flying">Flying</option>
-            <option value="psychic">Psychic</option>
-            <option value="bug">Bug</option>
-            <option value="rock">Rock</option>
-            <option value="ghost">Ghost</option>
-            <option value="dragon">Dragon</option>
-            <option value="dark">Dark</option>
-            <option value="steel">Steel</option>
-            <option value="fairy">Fairy</option>
-          </select>
+            <span>{selectedType || 'All Types'}</span>
+            <span>▼</span>
+          </button>
         </div>
       </div>
       
@@ -213,6 +197,38 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
         </div>
       )}
       </ul>
+      
+      <BottomSheet isOpen={isBottomSheetOpen} onClose={() => setIsBottomSheetOpen(false)}>
+        <h2 className="text-xl font-bold mb-4">Select Pokemon Type</h2>
+        <div className="type-grid">
+          <button
+            className={`type-button ${selectedType === '' ? 'selected' : ''}`}
+            onClick={() => {
+              selectType('');
+              setIsBottomSheetOpen(false);
+            }}
+          >
+            All Types
+          </button>
+          {['normal', 'fire', 'water', 'electric', 'grass', 'ice', 'fighting', 'poison', 
+            'ground', 'flying', 'psychic', 'bug', 'rock', 'ghost', 'dragon', 'dark', 'steel', 'fairy'
+          ].map((type) => (
+            <button
+              key={type}
+              className={`type-button ${selectedType === type ? 'selected' : ''}`}
+              onClick={() => {
+                selectType(type);
+                setIsBottomSheetOpen(false);
+              }}
+            >
+              <div className="type-icon">
+                <img src={`/elementsColor/${type}.svg`} alt={type} />
+              </div>
+              <span>{type}</span>
+            </button>
+          ))}
+        </div>
+      </BottomSheet>
 
       {!showSearchResults && !displayLoading && (
         <div className="pagination-container">

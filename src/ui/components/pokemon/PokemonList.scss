@@ -38,3 +38,35 @@
 .pagination-container {
   @apply flex justify-between items-center;
 }
+
+/* Bottom sheet type grid styles */
+.type-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding-bottom: 16px;
+}
+
+.type-button {
+  @apply border rounded-lg p-3 flex flex-col items-center transition-colors;
+  min-height: 100px;
+  
+  &:hover {
+    @apply bg-gray-50;
+  }
+  
+  &.selected {
+    @apply border-2 border-blue-500;
+    transform: scale(0.98);
+  }
+}
+
+.type-icon {
+  @apply flex items-center justify-center mb-2;
+  width: 48px;
+  height: 48px;
+  
+  img {
+    @apply w-8 h-8;
+  }
+}
