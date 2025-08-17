@@ -119,8 +119,31 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
           <button
             onClick={() => setIsBottomSheetOpen(true)}
             className="w-full p-2 border rounded flex justify-between items-center"
+            style={
+              selectedType 
+                ? { 
+                    backgroundColor: getColorsFromTypes([selectedType])+'33',
+                    color: 'black',
+                    border: '2px solid' + getColorsFromTypes([selectedType])+'33',
+                    fontWeight: 700
+                  }
+                : { 
+                    backgroundColor: '#000',
+                    color: 'white',
+                    border: 'none'
+                  }
+            }
           >
-            <span>{selectedType || 'All Types'}</span>
+            <div className="flex items-center gap-2">
+              {selectedType && (
+                <img 
+                  src={`/elementsColor/${selectedType}.svg`} 
+                  alt={selectedType} 
+                  className="w-5 h-5"
+                />
+              )}
+              <span className="capitalize">{selectedType || 'All Types'}</span>
+            </div>
             <span>▼</span>
           </button>
         </div>
