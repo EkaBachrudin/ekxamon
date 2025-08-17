@@ -104,13 +104,13 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
       
       {displayLoading && <div>Loading...</div>}
       
-      <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="controls-grid mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <input
             key="search-input"
             type="text"
             placeholder="Search Pokémon..."
-            className="w-full p-2 border rounded"
+            className="w-full py-2 px-4 border-[2px] rounded-3xl"
             value={query}
             onChange={(e) => searchPokemon(e.target.value)}
           />
@@ -118,19 +118,17 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
         <div>
           <button
             onClick={() => setIsBottomSheetOpen(true)}
-            className="w-full p-2 border rounded flex justify-between items-center"
+            className="select-button"
             style={
               selectedType 
                 ? { 
-                    backgroundColor: getColorsFromTypes([selectedType])+'33',
+                    backgroundColor: getColorsFromTypes([selectedType])[0]+'33',
                     color: 'black',
-                    border: '2px solid' + getColorsFromTypes([selectedType])+'33',
+                    border: '2px solid' + getColorsFromTypes([selectedType])[0]+'33',
                     fontWeight: 700
                   }
                 : { 
-                    backgroundColor: '#000',
-                    color: 'white',
-                    border: 'none'
+                    fontWeight: 700
                   }
             }
           >
@@ -170,7 +168,7 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
               </Link>
               <div className="flex mt-1">
                 {pokemon.types?.map((type, index) => (
-                 <div key={type} className='type-badge' style={{backgroundColor: getColorsFromTypes(pokemon.types)[index]}}>
+                 <div key={type} className='type-badge' style={{backgroundColor: getColorsFromTypes(pokemon.types)[index], color: 'white'}}>
                   <div className='w-[20px] h-[20px] bg-white rounded-full flex justify-center items-center'> <img src={`elementsColor/${type}.svg`} className='size-[13px]' alt="typeimage" /> </div>
                    <span>
                     {type}

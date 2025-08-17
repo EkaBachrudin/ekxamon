@@ -6,6 +6,10 @@
     @apply size-28 absolute right-1 z-10;
 }
 
+.select-button{
+  @apply w-full py-2 px-4 border flex justify-between items-center rounded-3xl;
+}
+
 .pokemon-element-container {
     @apply w-[126px] h-full flex justify-center items-center absolute right-0 rounded-2xl;
     .pokemon-element-img {
