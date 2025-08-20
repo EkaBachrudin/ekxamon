@@ -1,17 +1,21 @@
 .pokemon-detail {
-  @apply max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg;
+  @apply max-w-md mx-auto px-6 bg-white rounded-lg shadow-lg;
+}
+
+.bg-image{
+  @apply h-[307px] absolute w-full;
 }
 
 .pokemon-detail-title {
-  @apply text-3xl font-bold capitalize mb-4;
+  @apply text-3xl font-bold capitalize mb-4 z-10;
 }
 
 .pokemon-detail-image {
-  @apply w-48 h-48 object-contain;
+  @apply w-48 h-48 object-contain z-10;
 }
 
 .pokemon-detail-typesContainer {
-  @apply mt-4;
+  @apply mt-4 z-10;
 }
 
 .pokemon-detail-typesTitle {

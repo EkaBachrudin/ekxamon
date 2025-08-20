@@ -1,6 +1,7 @@
 import React from 'react';
 import { Pokemon } from '../../../domain/entities/pokemon';
 import './PokemonDetail.scss';
+import { getColorsFromTypes } from '@/utils/pokemonColors';
 
 interface PokemonDetailProps {
   pokemon: Pokemon;
@@ -34,6 +35,10 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
             className="pokemon-detail-image"
           />
         )}
+
+        <div className='bg-image' style={{backgroundColor: getColorsFromTypes(pokemon.types)[0]}}>
+            
+        </div>
         
         <div className="pokemon-detail-typesContainer">
           <h2 className="pokemon-detail-typesTitle">Types</h2>
