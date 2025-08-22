@@ -7,10 +7,10 @@ interface PokemonDetailProps {
   pokemon: Pokemon;
 }
 
-const DetailItem = ({ label, value }: { label: string; value: string | number }) => (
-  <div className="pokemon-detail-detailItem">
-    <p className="pokemon-detail-detailLabel">{label}</p>
-    <p className="pokemon-detail-detailValue">{value}</p>
+const DetailItem = ({ label, value, assetPath }: { label: string; value: string | number, assetPath: string }) => (
+  <div className="pokemon-desc">
+    <p className="pokemon-desc-label"><img src={assetPath} alt="" />  <span>{label}</span></p>
+    <p className="pokemon-desc-value">{value}</p>
   </div>
 );
 
@@ -45,7 +45,7 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
           width={180}
           alt="element"
         />
-      </div>
+      </div>  
 
       <h1 className="pokemon-detail-title">{pokemon.name}</h1>
 
@@ -53,8 +53,8 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
       <div className="pokemon-detail-typesList">
         {pokemon.types?.map((type, index) => (
           <div key={type} className='type-badge-detail' style={{ backgroundColor: getColorsFromTypes(pokemon.types)[index], color: 'white' }}>
-            <div className='w-[25px] h-[25px] bg-white rounded-full flex justify-center items-center'>
-              <img src={`/elementsColor/${type}.svg`} className='size-[17px]' alt="typeimagedetail" />
+            <div className='w-[23px] h-[23px] bg-white rounded-full flex justify-center items-center'>
+              <img src={`/elementsColor/${type}.svg`} className='size-[15px]' alt="typeimagedetail" />
             </div>
             <span>{type}</span>
           </div>
@@ -67,10 +67,13 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
         </div>
       )}
 
+      <div className='devider'></div>
+
       <div className="pokemon-detail-detailsGrid">
-        <DetailItem label="Weight" value={`${(pokemon.weight / 10).toFixed(1)} kg`} />
-        <DetailItem label="Height" value={`${(pokemon.height * 10).toFixed(1)} cm`} />
-        <DetailItem label="Category" value={pokemon.species || 'Unknown'} />
+        <DetailItem label="Weight" value={`${(pokemon.weight / 10).toFixed(1)} kg`} assetPath='/icons/weight.svg'/>
+        <DetailItem label="Height" value={`${(pokemon.height * 10).toFixed(1)} cm`} assetPath='/icons/height.svg'/>
+        <DetailItem label="Category" value={pokemon.species || 'Unknown'} assetPath='/icons/category.svg'/>
+        <DetailItem label="Ability" value={pokemon.abilities[0]} assetPath='/icons/ability.svg'/>
         <div className="pokemon-detail-abilitiesContainer">
           <h2 className="pokemon-detail-abilitiesTitle">Abilities</h2>
           <div className="pokemon-detail-abilitiesList">
@@ -86,26 +89,29 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
         </div>
 
         <div className="pokemon-detail-genderContainer">
-          <h2 className="pokemon-detail-genderTitle">Gender Distribution</h2>
+          <h2 className="pokemon-detail-genderTitle">Gender</h2>
           {pokemon.genderRate === -1 ? (
             <p className="text-gray-700">Genderless</p>
           ) : (
-            <div className="pokemon-detail-genderDistribution">
-              <span className="pokemon-detail-maleSymbol">♂</span>
-              <div className="pokemon-detail-genderBar">
-                <div
-                  className="h-full bg-gradient-to-r from-blue-400 to-pink-400"
-                  style={{
-                    width: '100%',
-                    background: `linear-gradient(to right, blue ${malePercent}%, pink 0%)`
-                  }}
-                />
+            <>  
+              <div className="pokemon-detail-genderDistribution">
+                <span className="pokemon-detail-maleSymbol">♂</span>
+                <div className="pokemon-detail-genderBar">
+                  <div
+                    className="h-full bg-gradient-to-r from-blue-400 to-pink-400"
+                    style={{
+                      width: '100%',
+                      background: `linear-gradient(to right, blue ${malePercent}%, pink 0%)`
+                    }}
+                  />
+                </div>
+                <span className="pokemon-detail-femaleSymbol">♀</span>
               </div>
-              <span className="pokemon-detail-femaleSymbol">♀</span>
-              <span className="pokemon-detail-genderPercentage">
-                ♂ {malePercent}% ♀ {femalePercent}%
-              </span>
-            </div>
+
+              <div className="pokemon-detail-genderPercentage">
+                  <span>{malePercent}%</span> <span>{femalePercent}%</span>
+              </div>
+            </>
           )}
         </div>
 
@@ -113,12 +119,12 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
           <h2 className="pokemon-detail-weaknessesTitle">Weaknesses</h2>
           <div className="pokemon-detail-weaknessesList">
             {pokemon.weaknesses?.map((weakness, index) => (
-              <span
-                key={index}
-                className="pokemon-detail-weaknessItem"
-              >
-                {weakness}
-              </span>
+              <div key={index} className='type-badge-weak' style={{ backgroundColor: getColorsFromTypes(pokemon.weaknesses)[index], color: 'white' }}>
+                <div className='w-[23px] h-[23px] bg-white rounded-full flex justify-center items-center'>
+                  <img src={`/elementsColor/${weakness}.svg`} className='size-[15px]' alt="typeimagedetail" />
+                </div>
+                <span>{weakness}</span>
+              </div>
             ))}
           </div>
         </div>
@@ -126,23 +132,35 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
 
       {pokemon.evolutionChain && pokemon.evolutionChain.length > 0 && (
         <div className="pokemon-detail-evolutionContainer">
-          <h2 className="pokemon-detail-evolutionTitle">Evolution Chain</h2>
-          <div className="flex flex-col items-center">
+          <h2 className="pokemon-detail-evolutionTitle">Evolution</h2>
+          <div className="pokemon-detail-evolutionTitle-inner">
             {pokemon.evolutionChain.map((stage, index) => (
               <React.Fragment key={index}>
                 <div className="pokemon-detail-evolutionStage">
-                  <img
-                    src={stage.imageUrl}
-                    alt={stage.species}
-                    className="pokemon-detail-evolutionStageImage"
-                  />
-                  <p className="pokemon-detail-evolutionStageName">{stage.species}</p>
-                  <div className="pokemon-detail-evolutionStageTypes">
-                    {stage.types.map((type, i) => (
-                      <span key={i} className="pokemon-detail-evolutionStageType">
-                        {type}
-                      </span>
-                    ))}
+                  <div className='evo-image-container' style={{backgroundColor: getColorsFromTypes(pokemon.types)[0]}}>
+                    <img
+                      className="evo-image"
+                      src={`/elements/${getElementImage(pokemon)}.svg`}
+                      alt="element"
+                    />
+
+                    <img
+                      src={stage.imageUrl}
+                      alt={stage.species}
+                      className="pokemon-detail-evolutionStageImage"
+                    />
+                  </div>
+                  <div className='w-[65%] ml-4'>
+                    <p className="pokemon-detail-evolutionStageName">{stage.species}</p>
+                    <div className="pokemon-detail-evolutionStageTypes">
+                      {stage.types.map((type, i) => (
+                        <div key={type} className='type-badge-evo' style={{ backgroundColor: getColorsFromTypes(stage.types)[i], color: 'white' }}>
+                          <div className='w-[23px] h-[23px] bg-white rounded-full flex justify-center items-center'>
+                            <img src={`/elementsColor/${type}.svg`} className='size-[15px]' alt="typeimagedetail" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
