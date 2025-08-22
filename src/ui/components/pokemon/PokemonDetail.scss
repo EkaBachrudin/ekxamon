@@ -1,29 +1,40 @@
 .pokemon-detail {
-  @apply max-w-md mx-auto px-6 bg-white rounded-lg shadow-lg;
+  @apply mx-auto bg-white shadow-lg relative px-4;
+  overflow-x: hidden;
 }
 
 .bg-image{
-  @apply h-[307px] absolute w-full;
+  @apply h-[300px] absolute w-full flex justify-center items-center top-0 left-0;
+  border-bottom-left-radius: 50%;
+  border-bottom-right-radius: 50%;
+  transform: scale(1.2);
+  transform-origin: center;
+  background: linear-gradient(to right, #0000 0%, #ffffff47 100%);
+
+  .element-image-detail{
+    @apply w-[150px];
+    mask-image: linear-gradient(to left top, #00000048 0%, #000000 100%);
+  }
 }
 
 .pokemon-detail-title {
-  @apply text-3xl font-bold capitalize mb-4 z-10;
+  @apply text-[32px] font-bold capitalize mb-6 z-10;
 }
 
 .pokemon-detail-image {
-  @apply w-48 h-48 object-contain z-10;
-}
-
-.pokemon-detail-typesContainer {
-  @apply mt-4 z-10;
+  @apply size-[300px] object-contain z-10 mt-36 relative justify-self-center;
 }
 
 .pokemon-detail-typesTitle {
-  @apply text-xl font-semibold mb-2;
+  @apply text-xl font-semibold mb-2 flex;
 }
 
 .pokemon-detail-typesList {
   @apply flex flex-wrap gap-2;
+}
+
+.type-badge-detail {
+  @apply mr-2 py-1 px-4 text-lg rounded-full capitalize text-black flex items-center justify-between gap-2 font-bold;
 }
 
 .pokemon-detail-typeItem {
@@ -143,13 +154,9 @@
 }
 
 .pokemon-detail-description {
-  @apply mt-4;
-}
-
-.pokemon-detail-descriptionTitle {
-  @apply text-xl font-semibold mb-2;
+  @apply mt-6;
 }
 
 .pokemon-detail-descriptionText {
-  @apply text-gray-700;
+  @apply text-gray-700 text-sm leading-6;
 }
