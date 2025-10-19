@@ -99,7 +99,7 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
   if (error) return <div>Error loading Pokémon</div>;
 
   return (
-    <div className="p-4">
+    <div className="p-4 max-w-[1440px] mx-auto">
       <h1 className="text-2xl font-bold mb-4">Pokémon List</h1>
       
       {displayLoading && <div>Loading...</div>}

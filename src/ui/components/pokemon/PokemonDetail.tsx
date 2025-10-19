@@ -115,7 +115,11 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
           )}
         </div>
 
-        <div className="pokemon-detail-weaknessesContainer">
+        
+      </div>
+
+      <div className='lg:flex lg:justify-between lg:gap-6'>
+        <div className="pokemon-detail-weaknessesContainer w-full">
           <h2 className="pokemon-detail-weaknessesTitle">Weaknesses</h2>
           <div className="pokemon-detail-weaknessesList">
             {pokemon.weaknesses?.map((weakness, index) => (
@@ -128,57 +132,57 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
             ))}
           </div>
         </div>
-      </div>
 
-      {pokemon.evolutionChain && pokemon.evolutionChain.length > 0 && (
-        <div className="pokemon-detail-evolutionContainer">
-          <h2 className="pokemon-detail-evolutionTitle">Evolution</h2>
-          <div className="pokemon-detail-evolutionTitle-inner">
-            {pokemon.evolutionChain.map((stage, index) => (
-              <React.Fragment key={index}>
-                <div className="pokemon-detail-evolutionStage">
-                  <div className='evo-image-container' style={{backgroundColor: getColorsFromTypes(pokemon.types)[0]}}>
-                    <img
-                      className="evo-image"
-                      src={`/elements/${getElementImage(pokemon)}.svg`}
-                      alt="element"
-                    />
+        {pokemon.evolutionChain && pokemon.evolutionChain.length > 0 && (
+          <div className="pokemon-detail-evolutionContainer w-full">
+            <h2 className="pokemon-detail-evolutionTitle">Evolution</h2>
+            <div className="pokemon-detail-evolutionTitle-inner">
+              {pokemon.evolutionChain.map((stage, index) => (
+                <React.Fragment key={index}>
+                  <div className="pokemon-detail-evolutionStage">
+                    <div className='evo-image-container' style={{ backgroundColor: getColorsFromTypes(pokemon.types)[0] }}>
+                      <img
+                        className="evo-image"
+                        src={`/elements/${getElementImage(pokemon)}.svg`}
+                        alt="element"
+                      />
 
-                    <img
-                      src={stage.imageUrl}
-                      alt={stage.species}
-                      className="pokemon-detail-evolutionStageImage"
-                    />
-                  </div>
-                  <div className='w-[65%] ml-4'>
-                    <p className="pokemon-detail-evolutionStageName">{stage.species}</p>
-                    <div className="pokemon-detail-evolutionStageTypes">
-                      {stage.types.map((type, i) => (
-                        <div key={type} className='type-badge-evo' style={{ backgroundColor: getColorsFromTypes(stage.types)[i], color: 'white' }}>
-                          <div className='w-[23px] h-[23px] bg-white rounded-full flex justify-center items-center'>
-                            <img src={`/elementsColor/${type}.svg`} className='size-[15px]' alt="typeimagedetail" />
+                      <img
+                        src={stage.imageUrl}
+                        alt={stage.species}
+                        className="pokemon-detail-evolutionStageImage"
+                      />
+                    </div>
+                    <div className='w-[65%] ml-4'>
+                      <p className="pokemon-detail-evolutionStageName">{stage.species}</p>
+                      <div className="pokemon-detail-evolutionStageTypes">
+                        {stage.types.map((type, i) => (
+                          <div key={type} className='type-badge-evo' style={{ backgroundColor: getColorsFromTypes(stage.types)[i], color: 'white' }}>
+                            <div className='w-[23px] h-[23px] bg-white rounded-full flex justify-center items-center'>
+                              <img src={`/elementsColor/${type}.svg`} className='size-[15px]' alt="typeimagedetail" />
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {index < pokemon.evolutionChain!.length - 1 && (
-                  <div className="pokemon-detail-evolutionArrow">
-                    <div className="text-xl text-gray-500">↓</div>
-                    {stage.minLevel !== undefined && (
-                      <div className="pokemon-detail-evolutionLevel">
-                        Level {stage.minLevel}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </React.Fragment>
-            ))}
+                  {index < pokemon.evolutionChain!.length - 1 && (
+                    <div className="pokemon-detail-evolutionArrow">
+                      <div className="text-xl text-gray-500">↓</div>
+                      {stage.minLevel !== undefined && (
+                        <div className="pokemon-detail-evolutionLevel">
+                          Level {stage.minLevel}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

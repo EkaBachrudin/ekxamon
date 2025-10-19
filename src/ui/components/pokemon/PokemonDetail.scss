@@ -1,6 +1,5 @@
 .pokemon-detail {
-  @apply mx-auto bg-white shadow-lg relative px-4 pb-14;
-  overflow-x: hidden;
+  @apply mx-auto bg-white relative px-4 pb-14 overflow-hidden max-w-[1440px];
 }
 
 .bg-image{
@@ -22,7 +21,7 @@
 }
 
 .pokemon-detail-image {
-  @apply size-[300px] object-contain z-10 mt-28 relative justify-self-center;
+  @apply size-[300px] object-contain z-10 pt-28 relative justify-self-center;
 }
 
 .pokemon-detail-typesTitle {
@@ -66,7 +65,7 @@
 }
 
 .pokemon-detail-abilitiesContainer {
-  @apply col-span-2 mt-[21px];
+  @apply col-span-2 lg:col-span-1 mt-[21px];
 }
 
 .pokemon-detail-abilitiesTitle {
@@ -82,7 +81,7 @@
 }
 
 .pokemon-detail-genderContainer {
-  @apply col-span-2 mt-[21px];
+  @apply col-span-2 lg:col-span-1 mt-[21px];
 }
 
 .pokemon-detail-genderTitle {
@@ -110,7 +109,7 @@
 }
 
 .pokemon-detail-weaknessesContainer {
-  @apply col-span-2 mt-[21px];
+  @apply mt-[40px];
 }
 
 .pokemon-detail-weaknessesTitle {
@@ -150,7 +149,7 @@
   @apply border shadow-sm flex w-full rounded-[90px];
 
   .evo-image-container{ 
-    @apply relative size-full w-[35%] rounded-[90px] flex justify-center items-center;
+    @apply relative size-full w-[35%] max-w-24 rounded-[90px] flex justify-center items-center;
 
       .evo-image {
         @apply absolute w-[50%];
