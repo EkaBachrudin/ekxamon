@@ -1,5 +1,6 @@
-import { useState, useEffect, type SetStateAction } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { usePokemonList } from '../../../presentation/hooks/use-pokemon-list';
 import { usePokemonSearch } from '../../../presentation/hooks/use-pokemon-search';
@@ -29,7 +30,7 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
       return;
     }
     setCurrentPage(page - 1);
-  }, [page]);
+  }, [page, router]);
   
   const { 
     query, 
@@ -41,7 +42,7 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
   const [selectedType, setSelectedType] = useState<string>('');
   const [showTypeResults, setShowTypeResults] = useState(false);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
-  const { data: typeData, isLoading: isTypeLoading } = usePokemonByType(
+  const { data: typeData } = usePokemonByType(
     repository,
     selectedType
   );
@@ -134,9 +135,11 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
           >
             <div className="flex items-center gap-2">
               {selectedType && (
-                <img 
-                  src={`/elementsColor/${selectedType}.svg`} 
-                  alt={selectedType} 
+                <Image
+                  src={`/elementsColor/${selectedType}.svg`}
+                  alt={selectedType}
+                  width={20}
+                  height={20}
                   className="w-5 h-5"
                 />
               )}
@@ -149,7 +152,7 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
       
       {showSearchResults && !showTypeFilter && (
         <div className="mb-2 text-sm text-gray-600">
-          Showing {searchResults.length} results for "{query}"
+          Showing {searchResults.length} results for &quot;{query}&quot;
         </div>
       )}
       
@@ -170,8 +173,8 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
               <div className="flex mt-1">
                 {pokemon.types?.map((type, index) => (
                  <div key={type} className='type-badge' style={{backgroundColor: getColorsFromTypes(pokemon.types)[index], color: 'white'}}>
-                  <div className='w-[20px] h-[20px] bg-white rounded-full flex justify-center items-center'> 
-                    <img src={`elementsColor/${type}.svg`} className='size-[13px]' alt="typeimage" /> 
+                  <div className='w-[20px] h-[20px] bg-white rounded-full flex justify-center items-center'>
+                    <Image src={`elementsColor/${type}.svg`} width={13} height={13} className='size-[13px]' alt="typeimage" />
                   </div>
                   <span>{type}</span>
                  </div>
@@ -180,18 +183,22 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
             </div>
 
             {pokemon.imageUrl && (
-              <img 
-                src={pokemon.imageUrl} 
-                alt={pokemon.name} 
+              <Image
+                src={pokemon.imageUrl}
+                alt={pokemon.name}
                 className="pokemon-image"
+                width={96}
+                height={96}
                 loading="lazy"
               />
             )}
 
             <div className='pokemon-element-container' style={{backgroundColor: getColorsFromTypes(pokemon.types)[0]}}>
-              <img
+              <Image
                 className="pokemon-element-img"
                 src={`/elements/${getElementImage(pokemon)}.svg`}
+                width={40}
+                height={40}
                 alt="element"
               />
             </div>
@@ -246,7 +253,7 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
               }}
             >
               <div className="type-icon">
-                <img src={`/elementsColor/${type}.svg`} alt={type} />
+                <Image src={`/elementsColor/${type}.svg`} width={24} height={24} alt={type} />
               </div>
               <span>{type}</span>
             </button>

@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Pokemon } from '../../../domain/entities/pokemon';
 import './PokemonDetail.scss';
 import { getColorsFromTypes } from '@/utils/pokemonColors';
@@ -9,7 +10,7 @@ interface PokemonDetailProps {
 
 const DetailItem = ({ label, value, assetPath }: { label: string; value: string | number, assetPath: string }) => (
   <div className="pokemon-desc">
-    <p className="pokemon-desc-label"><img src={assetPath} alt="" />  <span>{label}</span></p>
+    <p className="pokemon-desc-label"><Image src={assetPath} alt="" width={16} height={16} />  <span>{label}</span></p>
     <p className="pokemon-desc-value">{value}</p>
   </div>
 );
@@ -31,18 +32,21 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
   return (
     <div className="pokemon-detail">
       {pokemon.imageUrl && (
-        <img
+        <Image
           src={pokemon.imageUrl}
           alt={pokemon.name}
           className="pokemon-detail-image"
+          width={200}
+          height={200}
         />
       )}
 
       <div className='bg-image' style={{ backgroundColor: getColorsFromTypes(pokemon.types)[0] }}>
-        <img
+        <Image
           className="element-image-detail"
           src={`/elements/${getElementImage(pokemon)}.svg`}
           width={180}
+          height={180}
           alt="element"
         />
       </div>  
@@ -54,7 +58,7 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
         {pokemon.types?.map((type, index) => (
           <div key={type} className='type-badge-detail' style={{ backgroundColor: getColorsFromTypes(pokemon.types)[index], color: 'white' }}>
             <div className='w-[23px] h-[23px] bg-white rounded-full flex justify-center items-center'>
-              <img src={`/elementsColor/${type}.svg`} className='size-[15px]' alt="typeimagedetail" />
+              <Image src={`/elementsColor/${type}.svg`} width={15} height={15} className='size-[15px]' alt="typeimagedetail" />
             </div>
             <span>{type}</span>
           </div>
@@ -125,7 +129,7 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
             {pokemon.weaknesses?.map((weakness, index) => (
               <div key={index} className='type-badge-weak' style={{ backgroundColor: getColorsFromTypes(pokemon.weaknesses)[index], color: 'white' }}>
                 <div className='w-[23px] h-[23px] bg-white rounded-full flex justify-center items-center'>
-                  <img src={`/elementsColor/${weakness}.svg`} className='size-[15px]' alt="typeimagedetail" />
+                  <Image src={`/elementsColor/${weakness}.svg`} width={15} height={15} className='size-[15px]' alt="typeimagedetail" />
                 </div>
                 <span>{weakness}</span>
               </div>
@@ -141,16 +145,20 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
                 <React.Fragment key={index}>
                   <div className="pokemon-detail-evolutionStage">
                     <div className='evo-image-container' style={{ backgroundColor: getColorsFromTypes(pokemon.types)[0] }}>
-                      <img
+                      <Image
                         className="evo-image"
                         src={`/elements/${getElementImage(pokemon)}.svg`}
+                        width={60}
+                        height={60}
                         alt="element"
                       />
 
-                      <img
+                      <Image
                         src={stage.imageUrl}
                         alt={stage.species}
                         className="pokemon-detail-evolutionStageImage"
+                        width={80}
+                        height={80}
                       />
                     </div>
                     <div className='w-[65%] ml-4'>
@@ -159,7 +167,7 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
                         {stage.types.map((type, i) => (
                           <div key={type} className='type-badge-evo' style={{ backgroundColor: getColorsFromTypes(stage.types)[i], color: 'white' }}>
                             <div className='w-[23px] h-[23px] bg-white rounded-full flex justify-center items-center'>
-                              <img src={`/elementsColor/${type}.svg`} className='size-[15px]' alt="typeimagedetail" />
+                              <Image src={`/elementsColor/${type}.svg`} width={15} height={15} className='size-[15px]' alt="typeimagedetail" />
                             </div>
                           </div>
                         ))}
