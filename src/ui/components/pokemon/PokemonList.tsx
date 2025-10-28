@@ -189,7 +189,7 @@ export default function PokemonList({ repository, page }: PokemonListProps) {
                 className="pokemon-image"
                 width={96}
                 height={96}
-                loading="lazy"
+                priority={true}
               />
             )}
 

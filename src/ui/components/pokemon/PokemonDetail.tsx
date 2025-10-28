@@ -43,11 +43,12 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
 
       <div className='bg-image' style={{ backgroundColor: getColorsFromTypes(pokemon.types)[0] }}>
         <Image
-          className="element-image-detail"
+          className="element-image-detail size-[180px]"
           src={`/elements/${getElementImage(pokemon)}.svg`}
           width={180}
           height={180}
           alt="element"
+          priority={true}
         />
       </div>  
 
@@ -58,7 +59,7 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
         {pokemon.types?.map((type, index) => (
           <div key={type} className='type-badge-detail' style={{ backgroundColor: getColorsFromTypes(pokemon.types)[index], color: 'white' }}>
             <div className='w-[23px] h-[23px] bg-white rounded-full flex justify-center items-center'>
-              <Image src={`/elementsColor/${type}.svg`} width={15} height={15} className='size-[15px]' alt="typeimagedetail" />
+              <Image src={`/elementsColor/${type}.svg`} width={15} height={15} className='size-[15px]' alt="typeimagedetail" priority={true} />
             </div>
             <span>{type}</span>
           </div>
@@ -129,7 +130,7 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
             {pokemon.weaknesses?.map((weakness, index) => (
               <div key={index} className='type-badge-weak' style={{ backgroundColor: getColorsFromTypes(pokemon.weaknesses)[index], color: 'white' }}>
                 <div className='w-[23px] h-[23px] bg-white rounded-full flex justify-center items-center'>
-                  <Image src={`/elementsColor/${weakness}.svg`} width={15} height={15} className='size-[15px]' alt="typeimagedetail" />
+                  <Image src={`/elementsColor/${weakness}.svg`} width={15} height={15} className='size-[15px]' alt="typeimagedetail" priority={true} />
                 </div>
                 <span>{weakness}</span>
               </div>
@@ -151,6 +152,7 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({ pokemon }) => {
                         width={60}
                         height={60}
                         alt="element"
+                        priority={true}
                       />
 
                       <Image
